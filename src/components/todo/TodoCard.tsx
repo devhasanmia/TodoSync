@@ -1,14 +1,38 @@
+import { handleToggle, removeTodo } from "../../redux/features/todoSlice";
+import { useAppDispatch } from "../../redux/hooks";
 import { Button } from "../ui/button";
+import AddTodoModal from "./AddTodoModal";
+import UpdateTodoModal from "./UpdateTodo";
 
-const TodoCard = () => {
+type TTodoProps = {
+  id: string;
+  title: string;
+  description: string;
+  isCompleted: boolean
+};
+
+const TodoCard = ({ id, title, description, isCompleted }: TTodoProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleRemove = () => {
+    dispatch(removeTodo(id));
+  };
+  const handleToogle = () => {
+    dispatch(handleToggle(id))
+  }
+
+  const handleEdit = () => {
+    <AddTodoModal />
+  }
+
   return (
     <div className="bg-white rounded-md flex justify-between items-center p-5 border">
-      <input type="checkbox" />
-      <p>Todo Title</p>
-      <p>Time</p>
-      <p>Description</p>
+      <input type="checkbox" className="font-semibold size-5 border-red-500" onChange={handleToogle} />
+      <p>{title}</p>
+      <div>{isCompleted ? <p className="text-green-500 font-semibold">Done</p> : <p className="text-red-500 font-semibold">Pending</p>}</div>
+      <p>{description}</p>
       <div className="space-x-4">
-        <Button className="bg-red-500">
+        <Button onClick={handleRemove} className="bg-red-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -24,22 +48,7 @@ const TodoCard = () => {
             />
           </svg>
         </Button>
-        <Button className="bg-[#5C53FE]">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-            />
-          </svg>
-        </Button>
+        <UpdateTodoModal todoId={id}/>
       </div>
     </div>
   );

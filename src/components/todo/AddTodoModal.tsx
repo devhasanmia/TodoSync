@@ -12,13 +12,24 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { useAppDispatch } from "../../redux/hooks";
+import { addTodo } from "../../redux/features/todoSlice";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  const dispatch = useAppDispatch();
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log({ task, description });
+    const randomString = Math.random().toString(36).substring(2, 10);
+    const taskDetails = {
+      id: randomString,
+      title: task,
+      description: description,
+      isCompleted: false
+    }
+    dispatch(addTodo(taskDetails))
   };
   return (
     <Dialog>
@@ -42,7 +53,7 @@ const AddTodoModal = () => {
               </Label>
               <Input
                 id="task"
-                onBlur={(e) => setTask(e.target.value)}
+                onChange={(e) => setTask(e.target.value)}
                 placeholder="Enter your Task"
                 className="col-span-3"
               />
@@ -53,7 +64,7 @@ const AddTodoModal = () => {
               </Label>
               <Input
                 id="description"
-                onBlur={(e) => setDescription(e.target.value)}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter your Task Description"
                 className="col-span-3"
               />
@@ -61,8 +72,7 @@ const AddTodoModal = () => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit">Submit</Button>
-
+              <Button className="bg-primary-gradient text-xl font-semibold" type="submit">Submit</Button>
             </DialogClose>
           </DialogFooter>
         </form>
